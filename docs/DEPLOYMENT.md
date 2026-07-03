@@ -4,11 +4,13 @@ AgentShield is designed to meet the Buildathon requirement: a working prototype 
 
 ## Current prepared account
 
-Generated local testnet keypair:
+Funded Casper Wallet testnet account used for the live anchor:
 
-- Public key: `01b6b05f87bc0f8f5b25a9af3783e6c3ef75cd524b476a10f9769d5cff82a6db26`
-- Account hash: `account-hash-0b420c9b3ea75511de3a6bc96a8ecc1a1762446f2c9ee024f62041d3f30cc04b`
+- Public key: `0202e9f14df2d1462e43879fb944eb16060864840d350893b25c16cdb3ed95ae9fc4`
+- Account hash: `account-hash-faee5abfbc6fbeda319093a2a9896ab1eff39e2883af2414a27e7a1d18400dda`
 - Public RPC: `https://node.testnet.casper.network`
+- Deploy hash: `0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06`
+- Explorer: <https://testnet.cspr.live/deploy/0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06>
 
 Secret key path is local-only and ignored by Git: `.casper-testnet/agentshield/secret_key.pem`.
 
@@ -41,23 +43,17 @@ Open:
 https://testnet.cspr.live/tools/faucet
 ```
 
-Request testnet CSPR for:
+The account used for this submission has already been funded and anchored. To reproduce from a new account, request testnet CSPR for that new account public key.
+
+Submission account public key:
 
 ```text
-01b6b05f87bc0f8f5b25a9af3783e6c3ef75cd524b476a10f9769d5cff82a6db26
+0202e9f14df2d1462e43879fb944eb16060864840d350893b25c16cdb3ed95ae9fc4
 ```
-
-The current unfunded deploy attempt reached the public RPC and returned:
-
-```text
-Invalid Deploy: no such addressable entity
-```
-
-That is expected before the faucet creates/funds the account.
 
 ## 3. Anchor the sample AgentShield decision
 
-After funding, from repo root run:
+From repo root run:
 
 ```bash
 bash scripts/deploy-anchor-docker.sh
@@ -75,7 +71,13 @@ The script uses Docker to install `casper-client` in an isolated Linux container
 
 ## 4. Record judge evidence
 
-When the deploy succeeds, copy the deploy hash from `casper-client` output and add it to:
+Live deploy hash already recorded:
+
+```text
+0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06
+```
+
+If you redeploy, copy the new deploy hash from `casper-client` output and add it to:
 
 1. `README.md`
 2. DoraHacks BUIDL submission

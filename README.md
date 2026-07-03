@@ -62,22 +62,24 @@ Casper Testnet AgentShield anchor
 
 ## Casper Testnet anchor status
 
-A Casper testnet keypair has been generated locally for this project. The secret key is intentionally ignored by Git.
+A Casper Wallet testnet account was funded and used to anchor the AgentShield decision proof. The secret key is intentionally ignored by Git.
 
-- Public key: `01b6b05f87bc0f8f5b25a9af3783e6c3ef75cd524b476a10f9769d5cff82a6db26`
-- Account hash: `account-hash-0b420c9b3ea75511de3a6bc96a8ecc1a1762446f2c9ee024f62041d3f30cc04b`
+- Public key: `0202e9f14df2d1462e43879fb944eb16060864840d350893b25c16cdb3ed95ae9fc4`
+- Account hash: `account-hash-faee5abfbc6fbeda319093a2a9896ab1eff39e2883af2414a27e7a1d18400dda`
 - Public RPC checked: `https://node.testnet.casper.network`
 - Deployable WASM: `contracts/decision-session/target/wasm32-unknown-unknown/release/agentshield_decision_session.wasm`
 - WASM SHA-256: `a5f9dbb062233741cb9eba4f44f46a648ef47e3f873658d0d7e772521b0265e3`
 - Sample decision hash: `96526a72b11312a15cb456e90aa4aa7d99ee645b242af8eb0badee77f6d304e9`
+- Casper Testnet deploy hash: `0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06`
+- Explorer: <https://testnet.cspr.live/deploy/0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06>
 
-To finish the public on-chain proof, fund the public key above with Casper Testnet CSPR via <https://testnet.cspr.live/tools/faucet>, then run:
+The anchor was submitted with:
 
 ```bash
 bash scripts/deploy-anchor-docker.sh
 ```
 
-Current unfunded deploy attempt reached the public testnet RPC and returned `Invalid Deploy: no such addressable entity`, which is expected before the faucet creates/funds the account.
+RPC verification shows the account now has AgentShield named keys: `agentshield_action_id`, `agentshield_decision`, `agentshield_risk_score`, `agentshield_intent_hash`, `agentshield_policy_hash`, `agentshield_evidence_hash`, and `agentshield_decision_hash`.
 
 ## Honest MVP status
-The local prototype, test suite, dashboard, deployable WASM session contract, and Odra contract source are included. Live DoraHacks submission evidence needs one funded Casper Testnet deploy hash added here and in the DoraHacks BUIDL.
+The local prototype, test suite, dashboard, deployable WASM session contract, Odra contract source, and live Casper Testnet anchor evidence are included.
