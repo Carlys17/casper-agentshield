@@ -18,6 +18,14 @@ dist-ssr
 **/target/
 contracts/**/target/
 
+# Demo production intermediates (final MP4 is intentionally tracked)
+demo/*.mp3
+demo/*.vtt
+demo/*.py
+demo/silent.mp4
+demo/qc_*
+demo/voiceover.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -15,6 +15,10 @@ Most hackathon agents can pay, trade, rebalance, or call contracts. The missing 
 - Provides Casper on-chain anchoring via Rust/WASM session code plus Odra contract source.
 - Offers a judge-ready dashboard with safe, risky, mainnet-review, and dangerous-admin scenarios.
 
+## Demo video
+
+Watch the 2:33 judge walkthrough: [`demo/casper-agentshield-demo.mp4`](demo/casper-agentshield-demo.mp4)
+
 ## Quick start
 ```bash
 npm install
