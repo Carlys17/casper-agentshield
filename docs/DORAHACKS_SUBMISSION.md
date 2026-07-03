@@ -32,6 +32,23 @@ The MVP includes:
 - Open source: public GitHub repository with README and usage instructions.
 - Long-term impact: reusable safety layer for the Casper agent economy.
 
+## Requirement Checklist
+- Working prototype deployed on Casper Testnet: Yes. The dashboard and CLI demo are functional, and the BLOCK decision was anchored on Casper Testnet.
+- Transaction-producing on-chain component: Yes. The deploy writes AgentShield decision data into Casper account named keys.
+- Open-source repository: Yes. The GitHub repository is public and includes README, usage instructions, source code, tests, CI, and deployment documentation.
+- Public demo video: Yes. The demo video explains the problem, scenarios, features, walkthrough, and Testnet proof.
+- Casper Innovation Track: Yes. The project combines Agentic AI safety, DeFi/RWA transaction risk controls, x402/MCP security-check direction, and Casper audit proofs.
+
+## Final Round Judging Alignment
+- Technical Execution: TypeScript policy engine, React dashboard, Rust/WASM Casper anchor, CI, tests, and deployment docs.
+- Innovation & Originality: focuses on pre-signing security and auditability for autonomous agents rather than only creating another yield or oracle agent.
+- Use of AI / Agentic Systems: designed for autonomous agent tool requests and wallet-action gating.
+- Real-World Applicability: relevant for Casper DeFi agents, RWA feeds, DAO treasuries, governance execution, x402 services, and compliance workflows.
+- User Experience & Design: judge-ready dashboard with clear ALLOW, BLOCK, and REVIEW_REQUIRED scenarios.
+- Working Smart Contracts: Casper Testnet deploy hash and named-key proof are included.
+- Long-Term Launch Plans: MCP risk-check server, x402 paid API, proof registry, SDK helpers, and policy templates.
+- Potential Long-Term Impact: reusable trust and safety layer for Casper's agent economy.
+
 ## GitHub Repository
 https://github.com/Carlys17/casper-agentshield
 
@@ -81,3 +98,10 @@ npm run agent:demo
 
 ## Long-term Plan
 AgentShield can evolve into a reusable MCP/x402 security API for Casper agents. Other agents could pay per risk check, receive an ALLOW/BLOCK/REVIEW decision, and anchor or verify compliance proofs on Casper before performing high-value DeFi, RWA, treasury, or governance actions.
+
+Planned roadmap:
+1. MCP server exposing `evaluate_intent` for Casper agents.
+2. x402 payment flow for pay-per-risk-check usage.
+3. Casper proof registry for compact decision-hash anchoring.
+4. TypeScript SDK for wallet and agent integrations.
+5. Production policy templates for DeFi, RWA, DAO treasury, and compliance use cases.

@@ -64,6 +64,27 @@ Casper Testnet AgentShield anchor
 - **x402 path:** AgentShield can become a paid MCP/x402 security check API for other agents.
 - **Long-term impact:** a reusable safety layer for the Casper agent economy.
 
+## Buildathon requirement mapping
+
+| Casper Agentic Buildathon requirement | AgentShield evidence |
+| --- | --- |
+| Working prototype on Casper Testnet | Dashboard, CLI demo, policy engine, and live Casper Testnet anchor. |
+| Transaction-producing on-chain component | Deploy hash `0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06` writes AgentShield named keys. |
+| Open-source repository with README and usage instructions | This public repository includes setup, demo, architecture, deployment evidence, tests, and submission docs. |
+| Public demo video | `demo/casper-agentshield-demo.mp4` explains problem, features, scenarios, Testnet proof, and walkthrough. |
+| Casper Innovation Track | Combines Agentic AI safety, DeFi/RWA wallet-risk controls, x402/MCP security-check path, and Casper on-chain audit proofs. |
+| Final-round judging readiness | Includes technical execution, UI, smart-contract evidence, originality, real-world applicability, and long-term launch plan. |
+
+## Long-term launch plan
+
+AgentShield can become a reusable MCP/x402 security service for the Casper agent ecosystem:
+
+1. **MCP risk-check server:** expose `evaluate_intent` so yield agents, RWA oracle agents, and DAO agents can request ALLOW/BLOCK/REVIEW before signing.
+2. **x402 paid API:** let other agents pay per risk check and receive signed policy decisions.
+3. **Casper proof registry:** anchor compact decision proofs for compliance, user safety, and post-incident auditability.
+4. **Integrator SDK:** provide TypeScript helpers for Casper agent wallets and dashboards.
+5. **Production hardening:** add policy templates for DeFi treasuries, RWA feeds, governance execution, and compliance workflows.
+
 ## Casper Testnet anchor status
 
 A Casper Wallet testnet account was funded and used to anchor the AgentShield decision proof. The secret key is intentionally ignored by Git.
