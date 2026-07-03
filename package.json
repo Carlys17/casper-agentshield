@@ -1,0 +1,30 @@
+{
+  "name": "casper-agentshield",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "agent:demo": "tsx scripts/run-demo.ts",
+    "casper:hash": "tsx scripts/decision-hash.ts"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitest/ui": "latest",
+    "jsdom": "latest",
+    "vitest": "latest"
+  }
+}

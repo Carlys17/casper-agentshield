@@ -1,0 +1,11 @@
+[package]
+name = "agentshield-decision-session"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+casper-contract = "5.1.1"
+casper-types = "6.1.0"
+
+[lib]
+crate-type = ["cdylib"]

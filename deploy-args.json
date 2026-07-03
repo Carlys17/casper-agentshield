@@ -1,0 +1,9 @@
+[
+  {"name":"action_id","type":"String","value":"prompt-injection-drain"},
+  {"name":"decision","type":"String","value":"BLOCK"},
+  {"name":"risk_score","type":"U8","value":90},
+  {"name":"intent_hash","type":"String","value":"0b8bedee5174c34d3a258b19e74a4b06b67a52d234f9ef315abc3cfe7ecf2a51"},
+  {"name":"policy_hash","type":"String","value":"2a4d132a34c5086569283e9ef4e13a97ad94195cb304eb5a69cc90c3159733c0"},
+  {"name":"evidence_hash","type":"String","value":"e276d8d28c2b43c29e11d35ee0157b9b8011f082bbc37e872832337b3da22686"},
+  {"name":"decision_hash","type":"String","value":"96526a72b11312a15cb456e90aa4aa7d99ee645b242af8eb0badee77f6d304e9"}
+]

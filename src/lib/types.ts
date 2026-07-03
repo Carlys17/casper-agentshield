@@ -1,0 +1,5 @@
+export type Decision = 'ALLOW' | 'BLOCK' | 'REVIEW_REQUIRED'
+export type AgentAction = { id: string; agentId: string; intent: string; prompt: string; actionType: 'transfer' | 'contract_call' | 'x402_payment' | 'dex_swap' | 'oracle_update'; target: string; method?: string; amountCSPR: number; network: 'casper-test' | 'casper-mainnet'; metadata?: Record<string, string | number | boolean> }
+export type Policy = { name: string; version: string; maxSpendCSPR: number; maxSingleSpendCSPR: number; allowedNetworks: string[]; allowlistedTargets: string[]; allowlistedMethods: string[]; reviewAboveRiskScore: number; blockAboveRiskScore: number; requireHumanReviewForMainnet: boolean }
+export type Finding = { rule: string; severity: 'info' | 'low' | 'medium' | 'high' | 'critical'; message: string; score: number }
+export type ShieldDecision = { actionId: string; decision: Decision; riskScore: number; findings: Finding[]; intentHash: string; policyHash: string; decisionHash: string; evidenceHash: string; recommendedAction: string; casperAnchor: { contract: string; entryPoint: string; network: string; explorer?: string; status: 'ready-to-anchor' | 'anchored-demo' } }
