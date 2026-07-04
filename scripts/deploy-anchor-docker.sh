@@ -3,7 +3,22 @@ set -euo pipefail
 
 NODE_ADDRESS="${NODE_ADDRESS:-https://node.testnet.casper.network}"
 PAYMENT_AMOUNT="${PAYMENT_AMOUNT:-30000000000}"
-PROJECT_DIR="${PROJECT_DIR:-/c/Users/pardo/casper-agentshield}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="${PROJECT_DIR:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
+SECRET_KEY_PATH="${SECRET_KEY_PATH:-.casper-testnet/agentshield/secret_key.pem}"
+SESSION_WASM="${SESSION_WASM:-contracts/decision-session/target/wasm32-unknown-unknown/release/agentshield_decision_session.wasm}"
+
+if [[ ! -f "${PROJECT_DIR}/${SECRET_KEY_PATH}" ]]; then
+  echo "Missing Casper secret key: ${PROJECT_DIR}/${SECRET_KEY_PATH}" >&2
+  echo "Create/fund a Casper Testnet account, then place the key at that path or set SECRET_KEY_PATH." >&2
+  exit 1
+fi
+
+if [[ ! -f "${PROJECT_DIR}/${SESSION_WASM}" ]]; then
+  echo "Missing session WASM: ${PROJECT_DIR}/${SESSION_WASM}" >&2
+  echo "Build it first from contracts/decision-session, or set SESSION_WASM." >&2
+  exit 1
+fi
 
 MSYS_NO_PATHCONV=1 docker run --rm \
   -v "${PROJECT_DIR}:/work" \
@@ -17,9 +32,9 @@ MSYS_NO_PATHCONV=1 docker run --rm \
     casper-client put-deploy \
       --node-address '${NODE_ADDRESS}' \
       --chain-name casper-test \
-      --secret-key .casper-testnet/agentshield/secret_key.pem \
+      --secret-key '${SECRET_KEY_PATH}' \
       --payment-amount '${PAYMENT_AMOUNT}' \
-      --session-path contracts/decision-session/target/wasm32-unknown-unknown/release/agentshield_decision_session.wasm \
+      --session-path '${SESSION_WASM}' \
       --session-arg \"action_id:string:'prompt-injection-drain'\" \
       --session-arg \"decision:string:'BLOCK'\" \
       --session-arg \"risk_score:u8:'90'\" \

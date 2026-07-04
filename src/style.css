@@ -1,1 +1,249 @@
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#edf2ff;background:#07111f}body{margin:0;min-width:320px}main{max-width:1180px;margin:0 auto;padding:36px 20px 60px}.hero{display:flex;justify-content:space-between;gap:24px;align-items:stretch;margin-bottom:24px}.eyebrow{color:#75f0c1;text-transform:uppercase;font-size:12px;letter-spacing:.18em;font-weight:800}h1{font-size:58px;margin:4px 0;color:#f7fbff;text-shadow:0 0 28px rgba(117,240,193,.25)}h2{margin:0 0 16px}h3{margin:22px 0 10px}.subtitle{font-size:20px;line-height:1.55;color:#b8c5d6;max-width:780px}.scorecard,.panel{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid rgba(154,230,255,.18);border-radius:24px;box-shadow:0 18px 60px rgba(0,0,0,.35)}.scorecard{min-width:240px;padding:24px;display:flex;flex-direction:column;justify-content:center;gap:12px}.scorecard span,.muted,label,.hash span,.policy span{color:#8ea3bd}.scorecard strong{font-size:30px}.allow{color:#75f0c1}.block{color:#ff6b88}.review_required{color:#ffd166}.grid{display:grid;gap:18px;margin-top:18px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:1.2fr .9fr .9fr}.panel{padding:22px}select,textarea{width:100%;box-sizing:border-box;margin:8px 0 16px;padding:12px 14px;border-radius:14px;border:1px solid rgba(154,230,255,.2);background:#09182b;color:#edf2ff;font-size:14px}textarea{resize:vertical}.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.facts span,.policy div{padding:10px 12px;background:rgba(0,0,0,.22);border-radius:14px;color:#aebbd0}.facts b,.policy b{display:block;color:#fff;margin-top:4px;word-break:break-all}.findings{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}.findings li{display:grid;grid-template-columns:145px 1fr 48px;gap:10px;align-items:start;padding:12px;border-radius:14px;background:rgba(255,255,255,.055);border-left:4px solid #75f0c1}.findings li.medium{border-color:#ffd166}.findings li.high,.findings li.critical{border-color:#ff6b88}.findings span{color:#c7d4e6}.findings em{text-align:right;color:#fff}.hash{margin:10px 0;padding:10px;border-radius:12px;background:#06101c}.hash code{display:block;color:#9ae6ff;word-break:break-all;margin-top:6px;font-size:12px}pre{white-space:pre-wrap;background:#06101c;padding:16px;border-radius:14px;color:#75f0c1}.recommendation{font-size:18px;line-height:1.55;color:#fff}@media(max-width:900px){.hero,.two,.three{grid-template-columns:1fr;display:grid}h1{font-size:42px}.facts{grid-template-columns:1fr}.findings li{grid-template-columns:1fr}}
+main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+
+.hero {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: #79e6b5;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 12px;
+  color: #fbfffd;
+  font-size: 58px;
+  line-height: 1;
+}
+
+h2 {
+  margin-bottom: 16px;
+  color: #fbfffd;
+}
+
+h3 {
+  margin: 22px 0 10px;
+  color: #fbfffd;
+}
+
+.subtitle {
+  max-width: 780px;
+  color: #bdc9c2;
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.scorecard,
+.panel {
+  border: 1px solid rgba(205, 232, 218, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.26);
+}
+
+.scorecard {
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.scorecard span,
+.muted,
+label,
+.hash span,
+.policy span {
+  color: #a6b4ad;
+}
+
+.scorecard strong {
+  font-size: 30px;
+}
+
+.allow {
+  color: #79e6b5;
+}
+
+.block {
+  color: #ff7d8d;
+}
+
+.review_required {
+  color: #f4c96a;
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.three {
+  grid-template-columns: 1.2fr 0.9fr 0.9fr;
+}
+
+.panel {
+  padding: 22px;
+}
+
+select,
+textarea {
+  width: 100%;
+  margin: 8px 0 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(205, 232, 218, 0.2);
+  border-radius: 8px;
+  color: #ecf4f1;
+  background: #131a16;
+}
+
+textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.facts span,
+.policy div {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #aebbb3;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.facts b,
+.policy b {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  word-break: break-word;
+}
+
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.findings li {
+  display: grid;
+  grid-template-columns: 145px 1fr 48px;
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border-left: 4px solid #79e6b5;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.findings li.medium {
+  border-color: #f4c96a;
+}
+
+.findings li.high,
+.findings li.critical {
+  border-color: #ff7d8d;
+}
+
+.findings span {
+  color: #c9d5cf;
+}
+
+.findings em {
+  color: #fff;
+  font-style: normal;
+  text-align: right;
+}
+
+.hash {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #0c110e;
+}
+
+.hash code {
+  display: block;
+  margin-top: 6px;
+  color: #97e6c2;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  border-radius: 8px;
+  color: #97e6c2;
+  background: #0c110e;
+}
+
+.proof-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(121, 230, 181, 0.36);
+  border-radius: 8px;
+  color: #101410;
+  background: #79e6b5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.recommendation {
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .two,
+  .three {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .facts,
+  .findings li {
+    grid-template-columns: 1fr;
+  }
+}

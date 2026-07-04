@@ -1,24 +1,212 @@
 import type { AgentAction, Finding, Policy, ShieldDecision } from './types'
 import { canonicalJson, sha256Hex } from './hash'
-const INJECTION_PATTERNS = [/ignore (all )?(previous|prior|above) instructions/i,/reveal|export|print .*private key/i,/bypass|disable|turn off .*policy/i,/unlimited allowance/i,/send (all|everything|max)/i,/do not (log|record|tell|notify)/i,/secretly|silently|without user/i]
-const RISKY_METHODS = ['approve_unlimited', 'set_allowance_unlimited', 'upgrade_contract', 'transfer_owner', 'revoke_admin']
-export const defaultPolicy: Policy = { name: 'Casper AgentShield Default Policy', version: '2026.07.03', maxSpendCSPR: 25, maxSingleSpendCSPR: 5, allowedNetworks: ['casper-test'], allowlistedTargets: ['hash-agentshield-demo-vault','hash-cspr-trade-router-testnet','hash-x402-facilitator-testnet','01-agent-demo-wallet'], allowlistedMethods: ['record_decision','record_attestation','pay_x402','swap_exact_in','transfer'], reviewAboveRiskScore: 45, blockAboveRiskScore: 75, requireHumanReviewForMainnet: true }
-export async function evaluateAction(action: AgentAction, policy: Policy = defaultPolicy): Promise<ShieldDecision> {
-  const findings: Finding[] = []; const add = (finding: Finding) => findings.push(finding)
-  if (!policy.allowedNetworks.includes(action.network)) add({ rule: 'network.allowlist', severity: 'critical', score: 35, message: `Network ${action.network} is not allowed by policy.` })
-  if (policy.requireHumanReviewForMainnet && action.network === 'casper-mainnet') add({ rule: 'network.mainnet_review', severity: 'high', score: 25, message: 'Mainnet actions require human review before signing.' })
-  if (!policy.allowlistedTargets.includes(action.target)) add({ rule: 'target.allowlist', severity: 'high', score: 25, message: `Target ${action.target} is not in the allowlist.` })
-  if (action.method && !policy.allowlistedMethods.includes(action.method)) add({ rule: 'method.allowlist', severity: 'high', score: 20, message: `Method ${action.method} is not in the allowed method list.` })
-  if (action.method && RISKY_METHODS.includes(action.method)) add({ rule: 'method.dangerous', severity: 'critical', score: 55, message: `Dangerous method ${action.method} is blocked.` })
-  if (action.amountCSPR > policy.maxSingleSpendCSPR) add({ rule: 'spend.single_cap', severity: 'high', score: 25, message: `Amount ${action.amountCSPR} CSPR exceeds single-action cap ${policy.maxSingleSpendCSPR} CSPR.` })
-  for (const pattern of INJECTION_PATTERNS) { if (pattern.test(action.prompt) || pattern.test(action.intent)) { add({ rule: 'prompt.injection', severity: 'critical', score: 40, message: `Prompt-injection pattern detected: ${pattern}` }); break } }
-  const intentWords = normalizedWords(action.intent); const promptWords = normalizedWords(action.prompt); const overlap = [...intentWords].filter((w) => promptWords.has(w)).length
-  if (intentWords.size >= 6 && overlap / intentWords.size < 0.25) add({ rule: 'intent.mismatch', severity: 'medium', score: 15, message: 'Prompt content has low overlap with declared intent.' })
-  if (action.actionType === 'x402_payment' && action.amountCSPR > 1) add({ rule: 'x402.price_anomaly', severity: 'medium', score: 15, message: 'x402 payment amount is unusually high for a per-request tool call.' })
-  if (!findings.length) add({ rule: 'baseline', severity: 'info', score: 0, message: 'No policy violations detected. Safe to sign on Casper Testnet.' })
-  const riskScore = Math.min(100, findings.reduce((sum, f) => sum + f.score, 0)); const decision = riskScore >= policy.blockAboveRiskScore ? 'BLOCK' : riskScore >= policy.reviewAboveRiskScore ? 'REVIEW_REQUIRED' : 'ALLOW'
-  const intentHash = await sha256Hex(canonicalJson({ intent: action.intent, actionType: action.actionType, target: action.target, method: action.method, amountCSPR: action.amountCSPR })); const policyHash = await sha256Hex(canonicalJson(policy)); const evidenceHash = await sha256Hex(canonicalJson({ action, findings })); const decisionHash = await sha256Hex(canonicalJson({ actionId: action.id, decision, riskScore, intentHash, policyHash, evidenceHash }))
-  return { actionId: action.id, decision, riskScore, findings, intentHash, policyHash, decisionHash, evidenceHash, recommendedAction: recommendation(decision), casperAnchor: { contract: 'AgentShieldDecisionLog', entryPoint: 'record_decision', network: action.network, status: 'ready-to-anchor' } }
+
+const INJECTION_PATTERNS = [
+  /ignore (all )?(previous|prior|above) instructions/i,
+  /reveal|export|print .*private key/i,
+  /bypass|disable|turn off .*policy/i,
+  /unlimited allowance/i,
+  /send (all|everything|max)/i,
+  /do not (log|record|tell|notify)/i,
+  /secretly|silently|without user/i,
+]
+
+const RISKY_METHODS = [
+  'approve_unlimited',
+  'set_allowance_unlimited',
+  'upgrade_contract',
+  'transfer_owner',
+  'revoke_admin',
+]
+
+export const defaultPolicy: Policy = {
+  name: 'Casper AgentShield Default Policy',
+  version: '2026.07.03',
+  maxSpendCSPR: 25,
+  maxSingleSpendCSPR: 5,
+  allowedNetworks: ['casper-test'],
+  allowlistedTargets: [
+    'hash-agentshield-demo-vault',
+    'hash-cspr-trade-router-testnet',
+    'hash-x402-facilitator-testnet',
+    '01-agent-demo-wallet',
+  ],
+  allowlistedMethods: [
+    'record_decision',
+    'record_attestation',
+    'pay_x402',
+    'swap_exact_in',
+    'transfer',
+  ],
+  reviewAboveRiskScore: 45,
+  blockAboveRiskScore: 75,
+  requireHumanReviewForMainnet: true,
 }
-function normalizedWords(text: string): Set<string> { return new Set(text.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 3)) }
-function recommendation(decision: ShieldDecision['decision']): string { if (decision === 'ALLOW') return 'Proceed to sign/broadcast, then anchor this decision hash on Casper.'; if (decision === 'REVIEW_REQUIRED') return 'Pause autonomous signing and request human approval. Anchor REVIEW_REQUIRED evidence.'; return 'Do not sign. Block transaction before wallet handoff and anchor the blocked attempt for auditability.' }
+
+export async function evaluateAction(
+  action: AgentAction,
+  policy: Policy = defaultPolicy,
+): Promise<ShieldDecision> {
+  const findings: Finding[] = []
+  const add = (finding: Finding) => findings.push(finding)
+
+  if (!policy.allowedNetworks.includes(action.network)) {
+    add({
+      rule: 'network.allowlist',
+      severity: 'critical',
+      score: 35,
+      message: `Network ${action.network} is not allowed by policy.`,
+    })
+  }
+
+  if (policy.requireHumanReviewForMainnet && action.network === 'casper-mainnet') {
+    add({
+      rule: 'network.mainnet_review',
+      severity: 'high',
+      score: 25,
+      message: 'Mainnet actions require human review before signing.',
+    })
+  }
+
+  if (!policy.allowlistedTargets.includes(action.target)) {
+    add({
+      rule: 'target.allowlist',
+      severity: 'high',
+      score: 25,
+      message: `Target ${action.target} is not in the allowlist.`,
+    })
+  }
+
+  if (action.method && !policy.allowlistedMethods.includes(action.method)) {
+    add({
+      rule: 'method.allowlist',
+      severity: 'high',
+      score: 20,
+      message: `Method ${action.method} is not in the allowed method list.`,
+    })
+  }
+
+  if (action.method && RISKY_METHODS.includes(action.method)) {
+    add({
+      rule: 'method.dangerous',
+      severity: 'critical',
+      score: 55,
+      message: `Dangerous method ${action.method} is blocked.`,
+    })
+  }
+
+  if (action.amountCSPR > policy.maxSingleSpendCSPR) {
+    add({
+      rule: 'spend.single_cap',
+      severity: 'high',
+      score: 25,
+      message: `Amount ${action.amountCSPR} CSPR exceeds single-action cap ${policy.maxSingleSpendCSPR} CSPR.`,
+    })
+  }
+
+  for (const pattern of INJECTION_PATTERNS) {
+    if (pattern.test(action.prompt) || pattern.test(action.intent)) {
+      add({
+        rule: 'prompt.injection',
+        severity: 'critical',
+        score: 40,
+        message: `Prompt-injection pattern detected: ${pattern}`,
+      })
+      break
+    }
+  }
+
+  const intentWords = normalizedWords(action.intent)
+  const promptWords = normalizedWords(action.prompt)
+  const overlap = [...intentWords].filter((word) => promptWords.has(word)).length
+
+  if (intentWords.size >= 6 && overlap / intentWords.size < 0.25) {
+    add({
+      rule: 'intent.mismatch',
+      severity: 'medium',
+      score: 15,
+      message: 'Prompt content has low overlap with declared intent.',
+    })
+  }
+
+  if (action.actionType === 'x402_payment' && action.amountCSPR > 1) {
+    add({
+      rule: 'x402.price_anomaly',
+      severity: 'medium',
+      score: 15,
+      message: 'x402 payment amount is unusually high for a per-request tool call.',
+    })
+  }
+
+  if (!findings.length) {
+    add({
+      rule: 'baseline',
+      severity: 'info',
+      score: 0,
+      message: 'No policy violations detected. Safe to sign on Casper Testnet.',
+    })
+  }
+
+  const riskScore = Math.min(100, findings.reduce((sum, finding) => sum + finding.score, 0))
+  const decision =
+    riskScore >= policy.blockAboveRiskScore
+      ? 'BLOCK'
+      : riskScore >= policy.reviewAboveRiskScore
+        ? 'REVIEW_REQUIRED'
+        : 'ALLOW'
+
+  const intentHash = await sha256Hex(
+    canonicalJson({
+      intent: action.intent,
+      actionType: action.actionType,
+      target: action.target,
+      method: action.method,
+      amountCSPR: action.amountCSPR,
+    }),
+  )
+  const policyHash = await sha256Hex(canonicalJson(policy))
+  const evidenceHash = await sha256Hex(canonicalJson({ action, findings }))
+  const decisionHash = await sha256Hex(
+    canonicalJson({ actionId: action.id, decision, riskScore, intentHash, policyHash, evidenceHash }),
+  )
+
+  return {
+    actionId: action.id,
+    decision,
+    riskScore,
+    findings,
+    intentHash,
+    policyHash,
+    decisionHash,
+    evidenceHash,
+    recommendedAction: recommendation(decision),
+    casperAnchor: {
+      contract: 'AgentShieldDecisionLog',
+      entryPoint: 'record_decision',
+      network: action.network,
+      status: 'ready-to-anchor',
+    },
+  }
+}
+
+function normalizedWords(text: string): Set<string> {
+  return new Set(
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]/g, ' ')
+      .split(/\s+/)
+      .filter((word) => word.length > 3),
+  )
+}
+
+function recommendation(decision: ShieldDecision['decision']): string {
+  if (decision === 'ALLOW') {
+    return 'Proceed to sign/broadcast, then anchor this decision hash on Casper.'
+  }
+
+  if (decision === 'REVIEW_REQUIRED') {
+    return 'Pause autonomous signing and request human approval. Anchor REVIEW_REQUIRED evidence.'
+  }
+
+  return 'Do not sign. Block transaction before wallet handoff and anchor the blocked attempt for auditability.'
+}

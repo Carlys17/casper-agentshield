@@ -1,22 +1,24 @@
 # Casper Testnet Deployment Runbook
 
-AgentShield is designed to meet the Buildathon requirement: a working prototype with a transaction-producing on-chain component.
+AgentShield includes a transaction-producing Casper Testnet component: a Rust/WASM session that anchors a compact decision proof by writing named keys to a funded Testnet account.
 
-## Current prepared account
-
-Funded Casper Wallet testnet account used for the live anchor:
+## Current Testnet evidence
 
 - Public key: `0202e9f14df2d1462e43879fb944eb16060864840d350893b25c16cdb3ed95ae9fc4`
 - Account hash: `account-hash-faee5abfbc6fbeda319093a2a9896ab1eff39e2883af2414a27e7a1d18400dda`
-- Public RPC: `https://node.testnet.casper.network`
+- RPC: `https://node.testnet.casper.network`
 - Deploy hash: `0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06`
 - Explorer: <https://testnet.cspr.live/deploy/0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06>
 
-Secret key path is local-only and ignored by Git: `.casper-testnet/agentshield/secret_key.pem`.
+The secret key is intentionally not committed. The default local path is:
 
-## 1. Build the deployable Casper session WASM
+```text
+.casper-testnet/agentshield/secret_key.pem
+```
 
-This build is verified on Windows/Git-Bash using the GNU nightly toolchain:
+## 1. Build the deployable session WASM
+
+On Windows/Git-Bash, this was verified with the GNU nightly toolchain:
 
 ```bash
 cd contracts/decision-session
@@ -33,33 +35,37 @@ size: 26,539 bytes
 sha256: a5f9dbb062233741cb9eba4f44f46a648ef47e3f873658d0d7e772521b0265e3
 ```
 
-## 2. Fund the account
+## 2. Fund a Casper Testnet account
 
-CSPR.live faucet requires signing in with a compatible wallet, so CLI-only faucet claiming was not possible from Hermes.
-
-Open:
+Use the CSPR.live Testnet faucet:
 
 ```text
 https://testnet.cspr.live/tools/faucet
 ```
 
-The account used for this submission has already been funded and anchored. To reproduce from a new account, request testnet CSPR for that new account public key.
-
-Submission account public key:
-
-```text
-0202e9f14df2d1462e43879fb944eb16060864840d350893b25c16cdb3ed95ae9fc4
-```
+The submitted account has already been funded and used for the live anchor. To reproduce from a new account, request Testnet CSPR for the new public key and place the secret key at the default path above.
 
 ## 3. Anchor the sample AgentShield decision
 
-From repo root run:
+From the repo root:
 
 ```bash
 bash scripts/deploy-anchor-docker.sh
 ```
 
-The script uses Docker to install `casper-client` in an isolated Linux container and sends `contracts/decision-session/.../agentshield_decision_session.wasm` to `casper-test` with these decision fields:
+The script mounts the current repo into a Docker container, installs `casper-client`, and sends the session deploy to `casper-test`.
+
+Optional configuration:
+
+```bash
+NODE_ADDRESS=https://node.testnet.casper.network \
+PAYMENT_AMOUNT=30000000000 \
+SECRET_KEY_PATH=.casper-testnet/agentshield/secret_key.pem \
+SESSION_WASM=contracts/decision-session/target/wasm32-unknown-unknown/release/agentshield_decision_session.wasm \
+bash scripts/deploy-anchor-docker.sh
+```
+
+The sample deploy anchors these fields:
 
 - `action_id`: `prompt-injection-drain`
 - `decision`: `BLOCK`
@@ -71,19 +77,14 @@ The script uses Docker to install `casper-client` in an isolated Linux container
 
 ## 4. Record judge evidence
 
-Live deploy hash already recorded:
-
-```text
-0073e5c2595185eb9145ce60dbf9ac40d779f6fe6985dbd138701a4a72dd0e06
-```
-
-If you redeploy, copy the new deploy hash from `casper-client` output and add it to:
+After redeploying, copy the new deploy hash into:
 
 1. `README.md`
-2. DoraHacks BUIDL submission
-3. Demo video narration/screen capture
+2. `docs/DORAHACKS_SUBMISSION.md`
+3. DoraHacks BUIDL submission form
+4. Demo video description or pinned comment
 
-CSPR.live explorer format:
+Explorer format:
 
 ```text
 https://testnet.cspr.live/deploy/<DEPLOY_HASH>
@@ -91,4 +92,4 @@ https://testnet.cspr.live/deploy/<DEPLOY_HASH>
 
 ## Odra source
 
-The richer Odra/Rust contract source remains in `contracts/agentshield-policy`. On this Windows environment, syntax checking passed earlier, but the direct Odra build path was less reliable than the plain Casper session WASM above. For submission, the session WASM is the safer on-chain proof path.
+The richer Odra/Rust proof-registry source is in `contracts/agentshield-policy`. The submitted on-chain proof uses the simpler session WASM path because it is the most reproducible anchor for the qualification round. The Odra registry is the next step for final-round hardening.
