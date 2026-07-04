@@ -1,5 +1,9 @@
 # Casper AgentShield
 
+<p align="center">
+  <img src="assets/casper-agentshield-logo.png" alt="Casper AgentShield logo" width="180" />
+</p>
+
 **Security runtime for autonomous Casper agents.** AgentShield evaluates AI-agent transaction intents before wallet signing, blocks unsafe actions, and anchors every decision as an auditable Casper Testnet proof.
 
 Built for **Casper Agentic Buildathon 2026**.
