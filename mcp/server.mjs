@@ -102,7 +102,7 @@ process.stdin.on('data', (chunk) => {
       if (method === 'tools/list') return send(id, { tools: TOOLS })
       if (method === 'tools/call') {
         const { name, arguments: args } = params || {}
-        if (name === 'list_scenarios') return send(id, { content: [{ type: 'text', text: JSON.stringify(SCENARIOS.map((s) => ({ id: s.id, intent: s.intent.slice(0, 50) }), null, 2) }] })
+        if (name === 'list_scenarios') return send(id, { content: [{ type: 'text', text: JSON.stringify(SCENARIOS.map((s) => ({ id: s.id, intent: s.intent.slice(0, 50) })), null, 2) }] })
         if (name === 'evaluate_intent') {
           let res
           if (args?.scenarioId) { const sc = SCENARIOS.find((s) => s.id === args.scenarioId); if (!sc) return sendError(id, -32602, 'Unknown scenario') ; res = evaluateAction(sc) }
