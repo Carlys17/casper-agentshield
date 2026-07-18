@@ -25,9 +25,9 @@ Agentic wallets can pay APIs, call contracts, rebalance portfolios, and coordina
 
 ## Demo video
 
-Watch the 2:33 judge walkthrough: [`demo/casper-agentshield-demo.mp4`](demo/casper-agentshield-demo.mp4)
+Watch the 2:33 judge walkthrough on YouTube: [Casper AgentShield Demo](https://youtu.be/w4KqxN-ye8A)
 
-For DoraHacks, prefer a public YouTube/Loom URL and keep this MP4 as repo evidence.
+Repo MP4 evidence: [`demo/casper-agentshield-demo.mp4`](demo/casper-agentshield-demo.mp4)
 
 ## Quick start
 

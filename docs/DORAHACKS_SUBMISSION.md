@@ -60,8 +60,8 @@ https://github.com/Carlys17/casper-agentshield
 
 ## Demo Video
 
-Hosted public video:
-Add a public YouTube or Loom URL before final submission.
+YouTube (public/unlisted):
+https://youtu.be/w4KqxN-ye8A
 
 Repo MP4:
 https://github.com/Carlys17/casper-agentshield/blob/main/demo/casper-agentshield-demo.mp4
