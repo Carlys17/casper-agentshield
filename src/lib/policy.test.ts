@@ -33,4 +33,26 @@ describe('AgentShield policy engine', () => {
     expect(decision.decision).toBe('BLOCK')
     expect(decision.findings.map((finding) => finding.rule)).toContain('method.dangerous')
   })
+
+  it('blocks unlimited approval attempts', async () => {
+    const decision = await evaluateAction(scenarios[4])
+
+    expect(decision.decision).toBe('BLOCK')
+    expect(decision.findings.map((finding) => finding.rule)).toContain('method.dangerous')
+  })
+
+  it('flags unknown targets with a warning', async () => {
+    const decision = await evaluateAction(scenarios[5])
+
+    expect(decision.decision).toBe('ALLOW')
+    expect(decision.findings.map((finding) => finding.rule)).toContain('target.allowlist')
+  })
+
+  it('blocks intent-mismatch drain attempts', async () => {
+    const decision = await evaluateAction(scenarios[6])
+
+    expect(decision.decision).toBe('REVIEW_REQUIRED')
+    expect(decision.findings.map((finding) => finding.rule)).toContain('target.allowlist')
+    expect(decision.findings.map((finding) => finding.rule)).toContain('spend.single_cap')
+  })
 })

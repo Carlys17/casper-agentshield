@@ -17,7 +17,7 @@ Agentic wallets can pay APIs, call contracts, rebalance portfolios, and coordina
 - TypeScript policy engine for Casper agent tool requests.
 - Prompt-injection, target, method, network, spend-cap, and intent-mismatch checks.
 - Deterministic `intent_hash`, `policy_hash`, `evidence_hash`, and `decision_hash` generation.
-- Judge-ready React dashboard with safe, risky, mainnet-review, and dangerous-admin scenarios.
+- Offers a judge-ready dashboard with safe, risky, mainnet-review, dangerous-admin, unlimited-approval, unknown-target, and intent-mismatch scenarios.
 - CLI demo for repeatable ALLOW / REVIEW_REQUIRED / BLOCK evaluations.
 - Casper session WASM that writes AgentShield proof fields to Casper Testnet account named keys.
 - Odra-style `AgentShieldDecisionLog` contract source for the longer-lived proof registry path.

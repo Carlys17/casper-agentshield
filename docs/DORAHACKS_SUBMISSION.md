@@ -122,3 +122,9 @@ Planned roadmap:
 3. Casper proof registry for compact decision-hash anchoring.
 4. TypeScript SDK for wallet and agent integrations.
 5. Production policy templates for DeFi, RWA, DAO treasury, and compliance use cases.
+
+## Socials
+
+- GitHub: https://github.com/Carlys17/casper-agentshield
+- X/Twitter: https://x.com/carlysipahutar1
+- Demo video: https://raw.githubusercontent.com/Carlys17/casper-agentshield/main/demo/casper-agentshield-demo.mp4
